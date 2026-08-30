@@ -8,8 +8,20 @@ from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 import os
 
-# Page Configuration
+# Page Configuration & Sidebar-safe CSS (Arrow will NOT hide)
 st.set_page_config(page_title="Zynvix Studio Assistant", page_icon="🤖", layout="wide")
+
+hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    /* Only hiding the deployment badge/crown, keeping the header & arrow safe */
+    .viewerBadge_container__1QSob {display: none !important;}
+    .stAppDeployButton {display: none !important;}
+    header[data-testid="stHeader"] {background: transparent !important;}
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 st.title("🤖 Zynvix Studio Assistant")
 

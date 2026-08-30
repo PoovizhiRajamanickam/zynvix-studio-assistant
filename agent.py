@@ -3,7 +3,6 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
-# 1. API கீயை பாதுகாப்பாக எடுப்பது (Streamlit Cloud & Local இரண்டிற்கும் வேலை செய்யும்)
 api_key = None
 try:
     api_key = st.secrets.get("GEMINI_API_KEY")
@@ -28,9 +27,8 @@ def calculate_discount(price: float, discount_percentage: float) -> str:
     final_price = price - (price * (discount_percentage / 100))
     return f"The final price after a {discount_percentage}% discount is ₹{final_price:.2f}"
 
-# சாட் செட்டப்
 chat = client.chats.create(
-    model="gemini-3.6-flash",
+    model="gemini-2.5-flash",
     config=types.GenerateContentConfig(
         system_instruction="You are an official business consultant for Zynvix Studio. Always use tools to check local service notes and perform exact discount calculations in INR.",
         tools=[read_my_notes, calculate_discount],

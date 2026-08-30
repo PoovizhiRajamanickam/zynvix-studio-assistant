@@ -1,0 +1,11 @@
+[theme]
+base="dark"
+
+[client]
+showErrorDetails = false
+
+[ui]
+hideSidebarNav = true
+
+[server]
+headless = true
