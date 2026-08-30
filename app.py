@@ -224,13 +224,13 @@ if user_query := st.chat_input(input_placeholder):
             notes_content = get_notes()
             
             if selected_lang == "Tamil":
-                lang_instruction = "Respond politely and fluently in Tamil, including accurate pricing, email, phone number, and social links. Understand casual greetings like 'Hi' or Tanglish and be friendly and helpful like a human friend."
+                lang_instruction = "Respond politely and fluently in Tamil, including accurate pricing, email, phone number, and social links. Enthusiastically and friendly respond to casual greetings like 'Hi', 'Hello', or Tanglish like a close human friend."
             else:
-                lang_instruction = "Respond clearly, professionally, and entirely in English, but keep the tone warm, friendly, and approachable (like a helpful human assistant, not overly stiff)."
+                lang_instruction = "Respond clearly, professionally, and entirely in English, but keep the tone warm, friendly, and approachable (like a helpful human assistant, not overly stiff). Enthusiastically respond to casual greetings like 'Hi' or 'Hello'."
 
             system_prompt = f"""
             You are a friendly and helpful assistant for Zynvix Studio. 
-            You can understand casual greetings (like 'Hi'), Tanglish, or direct questions. 
+            You can understand casual greetings (like 'Hi', 'Hello', 'Hey'), Tanglish, or direct questions. Always respond warmly and conversationally to greetings.
             Provide direct, friendly, and complete answers regarding services (Resume Building, Poster Making, Portfolio Design, Website Development), pricing, discounts, and contact details based on the studio notes below.
             
             {lang_instruction}
@@ -251,7 +251,7 @@ if user_query := st.chat_input(input_placeholder):
                             "content": user_query,
                         }
                     ],
-                    model="llama-3.3-70b-versatile",
+                    model="llama-3.1-8b-instant",
                 )
                 bot_reply = chat_completion.choices[0].message.content
             except Exception as e:
