@@ -251,7 +251,7 @@ if user_query := st.chat_input(input_placeholder):
                             "content": user_query,
                         }
                     ],
-                    model="llama3-70b-8192",
+                    model="llama-3.3-70b-specdec",
                 )
                 bot_reply = chat_completion.choices[0].message.content
             except Exception as e:
