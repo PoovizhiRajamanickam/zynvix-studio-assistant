@@ -1,5 +1,5 @@
 import streamlit as st
-from google import genai
+from groq import Groq
 import streamlit.components.v1 as components
 import pandas as pd
 import smtplib
@@ -194,7 +194,11 @@ else:
     st.write("Ask anything about our services, pricing, offers, and contact details!")
     input_placeholder = "Type your question here..."
 
-client = genai.Client()
+# Groq Client Setup using Streamlit Secrets
+if "GROQ_API_KEY" in st.secrets:
+    os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 def get_notes():
     try:
@@ -224,7 +228,7 @@ if user_query := st.chat_input(input_placeholder):
             else:
                 lang_instruction = "Respond clearly, professionally, and entirely in English, but keep the tone warm, friendly, and approachable (like a helpful human assistant, not overly stiff)."
 
-            prompt = f"""
+            system_prompt = f"""
             You are a friendly and helpful assistant for Zynvix Studio. 
             You can understand casual greetings (like 'Hi'), Tanglish, or direct questions. 
             Provide direct, friendly, and complete answers regarding services (Resume Building, Poster Making, Portfolio Design, Website Development), pricing, discounts, and contact details based on the studio notes below.
@@ -233,15 +237,25 @@ if user_query := st.chat_input(input_placeholder):
             
             STUDIO NOTES:
             {notes_content}
-            
-            USER QUERY: {user_query}
             """
             
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
-            )
+            try:
+                chat_completion = client.chat.completions.create(
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": system_prompt
+                        },
+                        {
+                            "role": "user",
+                            "content": user_query,
+                        }
+                    ],
+                    model="llama-3.3-70b-versatile",
+                )
+                bot_reply = chat_completion.choices[0].message.content
+            except Exception as e:
+                bot_reply = f"API Error: Please check if your GROQ_API_KEY is correctly set in Streamlit Cloud Secrets. (Details: {e})"
             
-            bot_reply = response.text
             st.markdown(bot_reply)
             st.session_state.messages.append({"role": "assistant", "content": bot_reply})
