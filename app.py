@@ -220,13 +220,14 @@ if user_query := st.chat_input(input_placeholder):
             notes_content = get_notes()
             
             if selected_lang == "Tamil":
-                lang_instruction = "Respond politely and fluently in Tamil, including accurate pricing, email, phone number, and social links."
+                lang_instruction = "Respond politely and fluently in Tamil, including accurate pricing, email, phone number, and social links. Understand casual greetings like 'Hi' or Tanglish and be friendly and helpful like a human friend."
             else:
-                lang_instruction = "Respond clearly, professionally, and entirely in English."
+                lang_instruction = "Respond clearly, professionally, and entirely in English, but keep the tone warm, friendly, and approachable (like a helpful human assistant, not overly stiff)."
 
             prompt = f"""
-            You are a professional official business assistant for Zynvix Studio. 
-            Provide direct, friendly, and complete answers regarding services, pricing, discounts, and contact details (Email, Phone, Location, Instagram) based on the studio notes below.
+            You are a friendly and helpful assistant for Zynvix Studio. 
+            You can understand casual greetings (like 'Hi'), Tanglish, or direct questions. 
+            Provide direct, friendly, and complete answers regarding services (Resume Building, Poster Making, Portfolio Design, Website Development), pricing, discounts, and contact details based on the studio notes below.
             
             {lang_instruction}
             
@@ -237,7 +238,7 @@ if user_query := st.chat_input(input_placeholder):
             """
             
             response = client.models.generate_content(
-                model="gemini-3.6-flash",
+                model="gemini-2.5-flash",
                 contents=prompt,
             )
             
