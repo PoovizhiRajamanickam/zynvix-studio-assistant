@@ -1,5 +1,5 @@
 import streamlit as st
-from groq import Groq
+from huggingface_hub import InferenceClient
 import streamlit.components.v1 as components
 import pandas as pd
 import smtplib
@@ -194,11 +194,18 @@ else:
     st.write("Ask anything about our services, pricing, offers, and contact details!")
     input_placeholder = "Type your question here..."
 
-# Groq Client Setup using Streamlit Secrets
-if "GROQ_API_KEY" in st.secrets:
-    os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+# Hugging Face Client Setup using Streamlit Secrets or Environment Variables
+hf_token = ""
+try:
+    if "HUGGINGFACE_API_KEY" in st.secrets:
+        hf_token = st.secrets["HUGGINGFACE_API_KEY"]
+except Exception:
+    pass
 
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+if not hf_token:
+    hf_token = os.environ.get("HUGGINGFACE_API_KEY", "")
+
+client = InferenceClient(api_key=hf_token)
 
 def get_notes():
     try:
@@ -224,14 +231,13 @@ if user_query := st.chat_input(input_placeholder):
             notes_content = get_notes()
             
             if selected_lang == "Tamil":
-                lang_instruction = "Respond politely and fluently in Tamil, including accurate pricing, email, phone number, and social links. Enthusiastically and friendly respond to casual greetings like 'Hi', 'Hello', or Tanglish like a close human friend."
+                lang_instruction = "Respond politely and fluently in Tamil. Whenever listing services or pricing, you MUST present them vertically line-by-line using clear bullet points (-) or numbers (1., 2., 3., 4.). Never write services as a single paragraph sentence. Enthusiastically respond to casual greetings like 'Hi'."
             else:
-                lang_instruction = "Respond clearly, professionally, and entirely in English, but keep the tone warm, friendly, and approachable (like a helpful human assistant, not overly stiff). Enthusiastically respond to casual greetings like 'Hi' or 'Hello'."
+                lang_instruction = "Respond clearly and warmly in English. Whenever a user says 'Hi', asks about services, or asks for pricing, you MUST present the 4 core services (Resume Building, Poster Making, Portfolio Design, Website Development) vertically line-by-line using clear bullet points (-) or numbered lists (1, 2, 3, 4). Never pack services inside a paragraph sentence."
 
             system_prompt = f"""
             You are a friendly and helpful assistant for Zynvix Studio. 
-            You can understand casual greetings (like 'Hi', 'Hello', 'Hey'), Tanglish, or direct questions. Always respond warmly and conversationally to greetings.
-            Provide direct, friendly, and complete answers regarding services (Resume Building, Poster Making, Portfolio Design, Website Development), pricing, discounts, and contact details based on the studio notes below.
+            When greeting the user or listing services/pricing, always display the options and services vertically one below the other using clean bullet points (-) or numbers. 
             
             {lang_instruction}
             
@@ -240,7 +246,8 @@ if user_query := st.chat_input(input_placeholder):
             """
             
             try:
-                chat_completion = client.chat.completions.create(
+                completion = client.chat.completions.create(
+                    model="meta-llama/Llama-3.1-8B-Instruct",
                     messages=[
                         {
                             "role": "system",
@@ -251,11 +258,11 @@ if user_query := st.chat_input(input_placeholder):
                             "content": user_query,
                         }
                     ],
-                    model="llama-3.3-70b-specdec",
+                    max_tokens=500
                 )
-                bot_reply = chat_completion.choices[0].message.content
+                bot_reply = completion.choices[0].message.content
             except Exception as e:
-                bot_reply = f"API Error: Please check if your GROQ_API_KEY is correctly set in Streamlit Cloud Secrets. (Details: {e})"
+                bot_reply = f"API Error: Please check if your HUGGINGFACE_API_KEY is correctly set. (Details: {e})"
             
             st.markdown(bot_reply)
             st.session_state.messages.append({"role": "assistant", "content": bot_reply})

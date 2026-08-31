@@ -1,8 +1,8 @@
 # 🚀 Zynvix Studio Assistant
 
-An intelligent **AI-powered virtual assistant** built for **Zynvix Studio** to help customers instantly explore services, understand pricing, ask questions, and submit their project requirements.
+An intelligent **AI-powered virtual assistant** built for **Zynvix Studio** to help customers explore creative and development services, understand pricing, ask questions, and submit their project requirements.
 
-The assistant combines **Google GenAI, Python, and Streamlit** to provide a simple conversational experience while automatically collecting potential client leads.
+The assistant uses **Hugging Face's Meta Llama model**, **Python**, and **Streamlit** to provide an interactive conversational experience while capturing customer inquiries for easy follow-up.
 
 ---
 
@@ -11,45 +11,59 @@ The assistant combines **Google GenAI, Python, and Streamlit** to provide a simp
 ### 🤖 AI-Powered Chatbot
 
 * Conversational AI assistant for customer queries
-* Powered by Google's GenAI model
-* Answers questions using Zynvix Studio's custom business information
-* Provides relevant service and pricing details
+* Powered by **Meta Llama** through the Hugging Face Inference API
+* Uses `huggingface_hub` and `InferenceClient`
+* Answers questions using Zynvix Studio's business information
+* Provides service details and pricing information
+* Generates clean, conversational responses
 
 ### 🎨 Service Catalog
 
-Customers can quickly explore available services, including:
+Customers can explore Zynvix Studio's services, including:
 
-* 📄 Resume Building
-* 🎨 Poster Design
-* 💻 Portfolio Design
-* 🌐 Website Development
+* 📄 **Resume Building**
+* 🎨 **Poster Design**
+* 💻 **Portfolio Design**
+* 🌐 **Website Development**
 
-The assistant provides service descriptions and pricing information based on the configured business notes.
+Service descriptions and pricing are provided based on the business information configured in the project.
 
-### 📩 Automated Lead Generation
+### 📩 Lead Generation
 
 * Collects customer inquiries
-* Captures potential client requirements
-* Stores lead information systematically
-* Makes it easier to follow up with interested customers
+* Stores customer requirements and feedback
+* Maintains inquiry records in CSV format
+* Makes client follow-up easier
+* Supports automated email notifications for new inquiries
 
-### 💬 Conversational Interface
+### 🔐 Admin Control Panel
 
-* Simple and interactive chat experience
-* Built with Streamlit
-* Responsive and easy to use
+* Secure password-protected admin panel
+* View stored customer inquiries
+* Review customer feedback and ratings
+* Manage and monitor submitted leads
+
+### 💬 Modern Web Interface
+
+* Interactive chat-based interface
+* Built with **Streamlit**
+* Simple and user-friendly design
+* Responsive interface for different screen sizes
 * Designed for quick customer interactions
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Technology              | Purpose                      |
-| ----------------------- | ---------------------------- |
-| 🐍 **Python**           | Core programming language    |
-| 🎈 **Streamlit**        | Web application interface    |
-| 🤖 **Google GenAI SDK** | AI-powered conversations     |
-| 📊 **Pandas**           | Data handling and management |
+| Technology              | Purpose                                       |
+| ----------------------- | --------------------------------------------- |
+| 🐍 **Python**           | Core programming language                     |
+| 🎈 **Streamlit**        | Web application and user interface            |
+| 🤖 **Hugging Face Hub** | Llama model integration                       |
+| 🦙 **Meta Llama**       | AI language model                             |
+| 🔌 **InferenceClient**  | Communication with Hugging Face Inference API |
+| 📊 **Pandas**           | Data processing and management                |
+| 📁 **CSV**              | Customer inquiry and feedback storage         |
 
 ---
 
@@ -59,18 +73,22 @@ The assistant provides service descriptions and pricing information based on the
 zynvix-studio-assistant/
 │
 ├── app.py
-│   └── Main Streamlit web application
-│
-├── agent.py
-│   └── AI agent logic, session management,
-│      and Google GenAI integration
+│   └── Main Streamlit application
+│       ├── AI Chat Interface
+│       ├── Service Information
+│       ├── Lead Collection
+│       └── Admin Control Panel
 │
 ├── notes.txt
 │   └── Business information, services,
-│      pricing, and assistant knowledge
+│       pricing, and AI assistant knowledge
+│
+├── inquiries.csv
+│   └── Customer inquiries, feedback,
+│       ratings, and lead information
 │
 ├── requirements.txt
-│   └── Project dependencies
+│   └── Python dependencies
 │
 └── README.md
     └── Project documentation
@@ -81,28 +99,45 @@ zynvix-studio-assistant/
 ## ⚙️ How It Works
 
 ```text
-        👤 Customer
-             │
-             ▼
-     💬 Streamlit Chat UI
-             │
-             ▼
-      🤖 AI Assistant
-             │
-       ┌─────┴─────┐
-       ▼           ▼
-  📚 Business    🧠 Google
-     Notes          GenAI
-       │           │
-       └─────┬─────┘
-             ▼
-      💡 AI Response
-             │
-             ▼
-       📩 Lead Capture
+              👤 Customer
+                   │
+                   ▼
+          💬 Streamlit Chat UI
+                   │
+                   ▼
+            🤖 AI Assistant
+                   │
+          ┌────────┴────────┐
+          ▼                 ▼
+   📚 Business Notes    🦙 Llama Model
+      notes.txt         Hugging Face
+          │                 │
+          └────────┬────────┘
+                   ▼
+             💡 AI Response
+                   │
+                   ▼
+             📩 Lead Capture
+                   │
+          ┌────────┴────────┐
+          ▼                 ▼
+    📁 inquiries.csv    📧 Email Alert
+          │
+          ▼
+     🔐 Admin Panel
 ```
 
-The assistant uses the information stored in `notes.txt` as its business knowledge source. When a customer asks a question, the application sends the relevant context to the Google GenAI model and generates a suitable response.
+The assistant uses `notes.txt` as its business knowledge source.
+
+When a customer asks a question:
+
+1. The question is received through the Streamlit chat interface.
+2. Business information is loaded from `notes.txt`.
+3. The conversation context is sent to the **Meta Llama model** through the Hugging Face Inference API.
+4. `InferenceClient` handles communication with the Hugging Face model.
+5. The AI generates a relevant response.
+6. Customer inquiries and feedback can be stored in `inquiries.csv`.
+7. Administrators can review submitted inquiries through the protected Admin Panel.
 
 ---
 
@@ -128,13 +163,13 @@ python -m venv venv
 
 Activate the environment:
 
-**Windows:**
+**Windows**
 
 ```bash
 venv\Scripts\activate
 ```
 
-**macOS / Linux:**
+**macOS / Linux**
 
 ```bash
 source venv/bin/activate
@@ -146,60 +181,66 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 5. Configure API Key
+### 5. Configure Hugging Face API Key
 
-Create a Google GenAI API key and configure it as an environment variable.
+Create a **Hugging Face Access Token** and set it as an environment variable.
 
-**Windows PowerShell:**
+**Windows PowerShell**
 
 ```powershell
-$env:GEMINI_API_KEY="your-api-key"
+$env:HUGGINGFACE_API_KEY="your-api-key"
 ```
 
-**macOS / Linux:**
+**macOS / Linux**
 
 ```bash
-export GEMINI_API_KEY="your-api-key"
+export HUGGINGFACE_API_KEY="your-api-key"
 ```
 
-> ⚠️ Never commit your API key directly to GitHub.
+> ⚠️ **Security:** Never hard-code your API key or commit it to GitHub.
 
 ---
 
 ## ▶️ Run the Application
 
-Start the Streamlit application using:
+Start the Streamlit application:
 
 ```bash
 streamlit run app.py
 ```
 
-The application will open in your browser.
+The application will be available at:
+
+```text
+http://localhost:8501
+```
 
 ---
 
 ## 💼 Services
 
-| Service                | Description                                                   |
-| ---------------------- | ------------------------------------------------------------- |
-| 📄 Resume Building     | Professional and customized resume creation                   |
-| 🎨 Poster Making       | Creative posters for events, promotions, and social media     |
-| 💻 Portfolio Design    | Personal portfolio websites for students and professionals    |
-| 🌐 Website Development | Modern and responsive websites for businesses and individuals |
+| Service                    | Description                                                   |
+| -------------------------- | ------------------------------------------------------------- |
+| 📄 **Resume Building**     | Professional and customized resume creation                   |
+| 🎨 **Poster Making**       | Creative posters for events, promotions, and social media     |
+| 💻 **Portfolio Design**    | Personal portfolio websites for students and professionals    |
+| 🌐 **Website Development** | Modern and responsive websites for businesses and individuals |
 
 ---
 
 ## 🎯 Project Goals
 
-The main goals of the Zynvix Studio Assistant are to:
+The main goals of the **Zynvix Studio Assistant** are to:
 
-* Automate basic customer support
-* Provide instant service information
-* Make pricing information easily accessible
-* Reduce repetitive customer inquiries
-* Capture potential client leads
-* Improve customer engagement
-* Provide a scalable AI-based business assistant
+* 🤖 Automate basic customer support
+* 💬 Provide instant responses to customer queries
+* 🎨 Showcase design and development services
+* 💰 Make pricing information easily accessible
+* 📩 Capture potential client leads
+* 📊 Organize customer inquiries and feedback
+* 🔐 Provide secure admin access
+* 📧 Support automated inquiry notifications
+* 🚀 Create a scalable AI-powered business assistant
 
 ---
 
@@ -207,20 +248,20 @@ The main goals of the Zynvix Studio Assistant are to:
 
 Planned improvements may include:
 
-* 📧 Email notifications for new leads
-* 🗄️ Database integration for lead management
-* 📊 Admin dashboard
 * 💳 Online payment integration
-* 🌐 Multi-language support
 * 🧠 Improved conversational memory
-* 📈 Customer analytics
-* 🔔 Automated follow-up messages
+* 📈 Advanced customer analytics
+* 🔔 Automated customer follow-ups
+* 🗄️ Database integration
+* 📱 WhatsApp integration
+* 🌐 Multi-language support
+* 👤 Customer account management
 
 ---
 
 ## 👨‍💻 Built By
 
-**Zynvix Studio**
+### **Zynvix Studio**
 
 Creative solutions for **Design, Development & Digital Services**.
 
