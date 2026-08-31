@@ -186,12 +186,12 @@ if admin_password_input == "1612":
         st.info("No inquiries or feedbacks recorded yet.")
     st.markdown("---")
 
-# --- Main Chat Area (Fresh and Clean for Customers) ---
+# --- Main Chat Area (Clean & Simple with Sidebar Hint) ---
 if selected_lang == "Tamil":
-    st.write("வணக்கம்! Zynvix Studio சேவைகள், விலைகள் மற்றும் காண்டாக்ட் விபரங்களை என்னிடம் கேட்கலாம்.")
+    st.write("வணக்கம்! Zynvix Studio சேவைகள், விலைகள் மற்றும் விபரங்களை என்னிடம் கேட்கலாம்.\n\n💡 *இன்கொயரி செய்ய மேலே உள்ள `>>` ஐகானை அழுத்தவும்.*")
     input_placeholder = "உங்கள் கேள்வியை இங்கே தட்டச்சு செய்யவும்..."
 else:
-    st.write("Ask anything about our services, pricing, offers, and contact details!")
+    st.write("Ask anything about our services, pricing, offers, and contact details!\n\n💡 *Tap `>>` above for inquiries & feedback.*")
     input_placeholder = "Type your question here..."
 
 # Hugging Face Client Setup using Streamlit Secrets or Environment Variables
